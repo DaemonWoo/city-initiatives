@@ -3,9 +3,7 @@
 </script>
 
 <template>
-    <div>
-        <h1>Инициативы города</h1>
-    </div>
+<div>Create</div>
 </template>
 
 <style scoped>
