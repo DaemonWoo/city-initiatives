@@ -6,9 +6,16 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 
+const props = defineProps({
+    initiative: {
+        type: Object,
+        required: true,
+    },
+});
+
 const form = useForm({
-    title: '',
-    description: '',
+    title: props.initiative.title,
+    description: props.initiative.description,
     image: null,
 });
 
@@ -17,19 +24,20 @@ const onImageChange = (event) => {
 };
 
 const submit = () => {
-    form.post(route('initiatives.store'), {
+    form.post(route('initiatives.update', props.initiative.id), {
         forceFormData: true,
+        _method: 'put',
     });
 };
 </script>
 
 <template>
-    <Head title="New initiative" />
+    <Head title="Edit initiative" />
 
     <AuthenticatedLayout>
         <template #header>
             <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                New initiative
+                Edit initiative
             </h2>
         </template>
 
@@ -37,6 +45,14 @@ const submit = () => {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <form @submit.prevent="submit" class="space-y-6 p-6">
+                        <div v-if="initiative.image_url">
+                            <img
+                                :src="initiative.image_url"
+                                :alt="initiative.title"
+                                class="max-h-48 rounded-md object-cover"
+                            />
+                        </div>
+
                         <div>
                             <InputLabel for="title" value="Title" />
 
@@ -69,7 +85,7 @@ const submit = () => {
                         </div>
 
                         <div>
-                            <InputLabel for="image" value="Image" />
+                            <InputLabel for="image" value="Replace image" />
 
                             <input
                                 id="image"
@@ -83,7 +99,7 @@ const submit = () => {
                         </div>
 
                         <PrimaryButton :disabled="form.processing">
-                            Create
+                            Save
                         </PrimaryButton>
                     </form>
                 </div>
