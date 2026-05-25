@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\InitiativeFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +14,9 @@ use Illuminate\Support\Facades\Storage;
  */
 class Initiative extends Model
 {
+    /** @use HasFactory<InitiativeFactory> */
+    use HasFactory;
+
     protected $fillable = ['user_id', 'title', 'description', 'image'];
 
     protected $appends = ['image_url'];

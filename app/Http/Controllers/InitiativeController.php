@@ -91,6 +91,8 @@ class InitiativeController extends Controller
      */
     public function destroy(Initiative $initiative): RedirectResponse
     {
+        abort_unless($initiative->user_id === auth()->id(), 403);
+
         $initiative->delete();
 
         return redirect()

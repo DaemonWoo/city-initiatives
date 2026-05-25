@@ -1,6 +1,6 @@
 .PHONY: format lint test fresh serve clear
 
-format:
+fmt:
 	./vendor/bin/pint
 
 lint:

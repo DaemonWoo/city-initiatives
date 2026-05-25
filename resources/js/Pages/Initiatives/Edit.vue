@@ -24,7 +24,7 @@ const onImageChange = (event) => {
 };
 
 const submit = () => {
-    form.post(route('initiatives.update', props.initiative.id), {
+    form.put(route('initiatives.update', props.initiative.id), {
         forceFormData: true,
         _method: 'put',
     });
