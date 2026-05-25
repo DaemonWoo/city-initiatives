@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\InitiativeCommentController;
 use App\Http\Controllers\InitiativeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -24,6 +25,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('initiatives', InitiativeController::class);
+    Route::post('initiatives/{initiative}/comments', [InitiativeCommentController::class, 'store'])
+        ->name('initiatives.comments.store');
+    Route::delete('initiatives/{initiative}/comments/{comment}', [InitiativeCommentController::class, 'destroy'])
+        ->name('initiatives.comments.destroy');
 });
 
 require __DIR__.'/auth.php';

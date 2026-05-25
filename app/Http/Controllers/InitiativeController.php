@@ -52,7 +52,10 @@ class InitiativeController extends Controller
     public function show(Initiative $initiative): Response
     {
         return Inertia::render('Initiatives/Show', [
-            'initiative' => $initiative->load('user'),
+            'initiative' => $initiative->load([
+                'user',
+                'comments.user',
+            ]),
         ]);
     }
 
