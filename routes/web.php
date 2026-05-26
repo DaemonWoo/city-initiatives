@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InitiativeCommentController;
 use App\Http\Controllers\InitiativeController;
+use App\Http\Controllers\InitiativeVoteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function () {
         ->name('initiatives.comments.store');
     Route::delete('initiatives/{initiative}/comments/{comment}', [InitiativeCommentController::class, 'destroy'])
         ->name('initiatives.comments.destroy');
+    Route::post('initiatives/{initiative}/votes', [InitiativeVoteController::class, 'store'])
+        ->name('initiatives.votes.store');
 });
 
 require __DIR__.'/auth.php';

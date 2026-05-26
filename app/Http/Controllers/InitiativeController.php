@@ -17,8 +17,16 @@ class InitiativeController extends Controller
      */
     public function index(): Response
     {
+        $userId = auth()->id();
+
         return Inertia::render('Initiatives/Index', [
-            'initiatives' => Initiative::latest()->get(),
+            'initiatives' => Initiative::query()
+                ->withCount('votes')
+                ->withExists([
+                    'votes as has_voted' => fn ($query) => $query->where('user_id', $userId),
+                ])
+                ->latest()
+                ->get(),
         ]);
     }
 
@@ -51,11 +59,16 @@ class InitiativeController extends Controller
      */
     public function show(Initiative $initiative): Response
     {
+        $userId = auth()->id();
+
         return Inertia::render('Initiatives/Show', [
             'initiative' => $initiative->load([
                 'user',
                 'comments.user',
-            ]),
+            ])->loadCount('votes')->setAttribute(
+                'has_voted',
+                $initiative->votes()->where('user_id', $userId)->exists()
+            ),
         ]);
     }
 

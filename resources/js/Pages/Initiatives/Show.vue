@@ -18,6 +18,8 @@ const form = useForm({
     body: '',
 });
 
+const voteForm = useForm({});
+
 const submitComment = () => {
     form.post(route('initiatives.comments.store', props.initiative.id), {
         preserveScroll: true,
@@ -26,6 +28,12 @@ const submitComment = () => {
 };
 
 const canDeleteComment = (comment) => comment.user_id === user.id;
+
+const submitVote = () => {
+    voteForm.post(route('initiatives.votes.store', props.initiative.id), {
+        preserveScroll: true,
+    });
+};
 
 </script>
 
@@ -57,6 +65,20 @@ const canDeleteComment = (comment) => comment.user_id === user.id;
                         <p class="text-sm text-gray-500">
                             By {{ initiative.user.name }}
                         </p>
+
+                        <div class="flex items-center gap-3">
+                            <button
+                                type="button"
+                                class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-40"
+                                :disabled="initiative.has_voted || voteForm.processing"
+                                @click="submitVote"
+                            >
+                                {{ initiative.has_voted ? 'You already voted' : 'Vote' }}
+                            </button>
+                            <span class="text-sm text-gray-600">
+                                Votes: {{ initiative.votes_count }}
+                            </span>
+                        </div>
 
                         <Link
                             :href="route('initiatives.edit', initiative.id)"

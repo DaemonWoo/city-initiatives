@@ -59,6 +59,9 @@ defineProps({
                                     <p class="mt-1 line-clamp-2 text-sm text-gray-600">
                                         {{ initiative.description }}
                                     </p>
+                                    <p class="mt-1 text-xs text-gray-500">
+                                        Votes: {{ initiative.votes_count }}
+                                    </p>
                                 </div>
                             </li>
                         </ul>
