@@ -25,7 +25,7 @@ class Initiative extends Model
 
     public function getViewsCountAttribute(): int
     {
-        return $this->getAttributeFromArray('views_count');
+        return $this->getAttributeFromArray('views_count') ?? 0;
     }
 
     protected static function booted(): void
