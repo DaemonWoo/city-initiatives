@@ -61,6 +61,15 @@ class InitiativeController extends Controller
     {
         $userId = auth()->id();
 
+        // Increment view count only once per session
+        $viewedInitiatives = session()->get('viewed_initiatives', []);
+
+        if (! in_array($initiative->id, $viewedInitiatives)) {
+            $initiative->increment('views_count');
+            $viewedInitiatives[] = $initiative->id;
+            session()->put('viewed_initiatives', $viewedInitiatives);
+        }
+
         return Inertia::render('Initiatives/Show', [
             'initiative' => $initiative->load([
                 'user',

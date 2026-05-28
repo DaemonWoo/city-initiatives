@@ -78,6 +78,9 @@ const submitVote = () => {
                             <span class="text-sm text-gray-600">
                                 Votes: {{ initiative.votes_count }}
                             </span>
+                            <span class="text-sm text-gray-600 ml-4">
+                                Views: {{ initiative.views_count }}
+                            </span>
                         </div>
 
                         <Link

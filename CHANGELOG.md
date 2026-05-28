@@ -5,3 +5,5 @@
 ### Added
 - Initiatives CRUD
 - Comments on initiative
+- Authorized user can vote for an initiative
+- `views_count` in initiative increments once per user session

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * @property string|null $image
  * @property string|null $image_url
+ * @property int $views_count
  */
 class Initiative extends Model
 {
@@ -20,7 +21,12 @@ class Initiative extends Model
 
     protected $fillable = ['user_id', 'title', 'description', 'image'];
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'views_count'];
+
+    public function getViewsCountAttribute(): int
+    {
+        return $this->getAttributeFromArray('views_count');
+    }
 
     protected static function booted(): void
     {
