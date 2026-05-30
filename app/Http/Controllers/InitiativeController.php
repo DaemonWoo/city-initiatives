@@ -6,6 +6,7 @@ use App\Http\Requests\StoreInitiativeRequest;
 use App\Http\Requests\UpdateInitiativeRequest;
 use App\Models\Initiative;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -17,16 +18,29 @@ class InitiativeController extends Controller
      */
     public function index(): Response
     {
-        $userId = auth()->id();
-
-        return Inertia::render('Initiatives/Index', [
-            'initiatives' => Initiative::query()
+        $initiatives = Cache::remember(
+            'initiatives_list_shared',
+            60,
+            fn () => Initiative::query()
                 ->withCount('votes')
-                ->withExists([
-                    'votes as has_voted' => fn ($query) => $query->where('user_id', $userId),
-                ])
                 ->latest()
-                ->get(),
+                ->get()
+        );
+
+        $votedInitiativeIds = auth()->check()
+            ? auth()->user()
+                ->votes()
+                ->pluck('initiative_id')
+                ->flip()
+            : collect();
+
+        $initiatives->each(function ($initiative) use ($votedInitiativeIds) {
+            $initiative->has_voted = isset($votedInitiativeIds[$initiative->id]);
+        });
+
+        // TODO: Investigate caching need
+        return Inertia::render('Initiatives/Index', [
+            'initiatives' => $initiatives,
         ]);
     }
 
@@ -76,7 +90,7 @@ class InitiativeController extends Controller
                 'comments.user',
             ])->loadCount('votes')->setAttribute(
                 'has_voted',
-                $initiative->votes()->where('user_id', $userId)->exists()
+                $initiative->votes()->where('user_id', $userId)->exists(),
             ),
         ]);
     }
