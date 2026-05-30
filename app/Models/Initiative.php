@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
  * @property string|null $image
  * @property string|null $image_url
  * @property int $views_count
+ * @property-read User $user
  */
 class Initiative extends Model
 {

@@ -5,16 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use App\Models\Initiative;
+use App\Notifications\NewCommentNotification;
 use Illuminate\Http\RedirectResponse;
 
 class InitiativeCommentController extends Controller
 {
     public function store(StoreCommentRequest $request, Initiative $initiative): RedirectResponse
     {
-        $initiative->comments()->create([
+        $comment = $initiative->comments()->create([
             'user_id' => $request->user()->id,
             ...$request->safe()->only('body'),
         ]);
+        $comment->load('user', 'initiative');
+        $initiative->user
+            ->notify(new NewCommentNotification($comment));
 
         return redirect()
             ->route('initiatives.show', $initiative)
