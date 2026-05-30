@@ -26,6 +26,10 @@ class NewCommentNotification extends Notification
      */
     public function via(object $notifiable): array
     {
+        if ($this->comment->user_id === $notifiable->id) {
+            return [];
+        }
+
         return ['mail'];
     }
 
