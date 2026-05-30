@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $initiative_id
  * @property int $user_id
  * @property string $body
+ * @property-read User $user
  */
 #[Fillable(['initiative_id', 'user_id', 'body'])]
 class Comment extends Model
