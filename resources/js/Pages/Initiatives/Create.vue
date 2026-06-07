@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import ImageUpload from '@/Components/ImageUpload.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -11,10 +12,6 @@ const form = useForm({
     description: '',
     image: null,
 });
-
-const onImageChange = (event) => {
-    form.image = event.target.files[0] ?? null;
-};
 
 const submit = () => {
     form.post(route('initiatives.store'), {
@@ -34,19 +31,23 @@ const submit = () => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-4xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div class="border-b border-gray-200 px-6 py-5">
+                        <h1 class="text-2xl font-semibold text-gray-900">
+                            Create Initiative
+                        </h1>
+
+                        <p class="mt-2 text-sm text-gray-500">
+                            Describe your idea to improve the city.
+                        </p>
+                    </div>
+
                     <form @submit.prevent="submit" class="space-y-6 p-6">
                         <div>
                             <InputLabel for="title" value="Title" />
 
-                            <TextInput
-                                id="title"
-                                v-model="form.title"
-                                type="text"
-                                class="mt-1 block w-full"
-                                required
-                            />
+                            <TextInput id="title" v-model="form.title" type="text" class="mt-1 block w-full" required />
 
                             <InputError class="mt-2" :message="form.errors.title" />
                         </div>
@@ -62,21 +63,14 @@ const submit = () => {
                                 required
                             />
 
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.description"
-                            />
+                            <InputError class="mt-2" :message="form.errors.description" />
                         </div>
 
                         <div>
-                            <InputLabel for="image" value="Image" />
-
-                            <input
+                            <ImageUpload
                                 id="image"
-                                type="file"
-                                accept="image/*"
-                                class="mt-1 block w-full text-sm text-gray-600"
-                                @change="onImageChange"
+                                v-model="form.image"
+                                label="Image"
                             />
 
                             <InputError class="mt-2" :message="form.errors.image" />
