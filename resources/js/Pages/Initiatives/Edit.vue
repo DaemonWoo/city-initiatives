@@ -1,5 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import ImageUpload from '@/Components/ImageUpload.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -18,10 +19,6 @@ const form = useForm({
     description: props.initiative.description,
     image: null,
 });
-
-const onImageChange = (event) => {
-    form.image = event.target.files[0] ?? null;
-};
 
 const submit = () => {
     form.put(route('initiatives.update', props.initiative.id), {
@@ -45,24 +42,10 @@ const submit = () => {
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                     <form @submit.prevent="submit" class="space-y-6 p-6">
-                        <div v-if="initiative.image_url">
-                            <img
-                                :src="initiative.image_url"
-                                :alt="initiative.title"
-                                class="max-h-48 rounded-md object-cover"
-                            />
-                        </div>
-
                         <div>
                             <InputLabel for="title" value="Title" />
 
-                            <TextInput
-                                id="title"
-                                v-model="form.title"
-                                type="text"
-                                class="mt-1 block w-full"
-                                required
-                            />
+                            <TextInput id="title" v-model="form.title" type="text" class="mt-1 block w-full" required />
 
                             <InputError class="mt-2" :message="form.errors.title" />
                         </div>
@@ -78,21 +61,16 @@ const submit = () => {
                                 required
                             />
 
-                            <InputError
-                                class="mt-2"
-                                :message="form.errors.description"
-                            />
+                            <InputError class="mt-2" :message="form.errors.description" />
                         </div>
 
                         <div>
-                            <InputLabel for="image" value="Replace image" />
-
-                            <input
+                            <ImageUpload
                                 id="image"
-                                type="file"
-                                accept="image/*"
-                                class="mt-1 block w-full text-sm text-gray-600"
-                                @change="onImageChange"
+                                v-model="form.image"
+                                label="Image"
+                                :existing-image-url="initiative.image_url"
+                                :existing-image-alt="initiative.title"
                             />
 
                             <InputError class="mt-2" :message="form.errors.image" />
